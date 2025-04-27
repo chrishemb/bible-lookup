@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bible</title>
+    <title>Bible Form</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        form {
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+        #bibleIframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+    </style>
     <script>
         function updateIframe(event) {
             event.preventDefault(); // Prevent default form submission
@@ -60,29 +82,29 @@
     </script>
 </head>
 <body>
-    <form onsubmit="updateIframe(event)">
-        <label>
-            <input type="checkbox" id="oldTestament" onclick="populateBooks()"> Old Testament
-        </label>
-        <label>
-            <input type="checkbox" id="newTestament" onclick="populateBooks()"> New Testament
-        </label>
-        <label for="bookList">Book:</label>
-        <select id="bookList" name="book" required>
-            <!-- Options will be populated dynamically -->
-        </select>
-        <label for="version">Version:</label>
-        <select id="version" name="version" required>
-            <option value="NIV">NIV</option>
-            <option value="NLT">NLT</option>
-            <option value="ESV">ESV</option>
-            <option value="NKJV">NKJV</option>
-            <option value="KJV">KJV</option>
-            <!-- Add more versions as needed -->
-        </select>
-        <button type="submit">Submit</button>
-    </form>
-    <iframe id="bibleIframe" width="100%" height="1000px" style="border: none;"></iframe>
-
+    <div id="container">
+        <form onsubmit="updateIframe(event)">
+            <label>
+                <input type="checkbox" id="oldTestament" onclick="populateBooks()"> Old Testament
+            </label>
+            <label>
+                <input type="checkbox" id="newTestament" onclick="populateBooks()"> New Testament
+            </label>
+            <label for="bookList">Book:</label>
+            <select id="bookList" name="book" required>
+                <!-- Options will be populated dynamically -->
+            </select>
+            <label for="version">Version:</label>
+            <select id="version" name="version" required>
+                <option value="NIV">NIV</option>
+                <option value="NLT">NLT</option>
+                <option value="ESV">ESV</option>
+                <option value="NKJV">NKJV</option>
+                <option value="KJV">KJV</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+        <iframe id="bibleIframe"></iframe>
+    </div>
 </body>
 </html>
