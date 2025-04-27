@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible</title>
+    <script>
+        function updateIframe(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get selected values
+            const book = document.getElementById("bookList").value;
+            const version = document.getElementById("version").value;
+
+            // Construct the URL
+            const newPageURL = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(book)}&version=${encodeURIComponent(version)}&interface=print`;
+
+            // Update the iframe to display the new page
+            document.getElementById("bibleIframe").src = newPageURL;
+        }
+
+        const oldTestamentBooks = [
+            "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+            "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+            "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra",
+            "Nehemiah", "Esther", "Job", "Psalms", "Proverbs",
+            "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
+            "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah",
+            "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah",
+            "Haggai", "Zechariah", "Malachi"
+        ];
+
+        const newTestamentBooks = [
+            "Matthew", "Mark", "Luke", "John", "Acts",
+            "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+            "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+            "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews",
+            "James", "1 Peter", "2 Peter", "1 John", "2 John",
+            "3 John", "Jude", "Revelation"
+        ];
+
+        function populateBooks() {
+            const bookList = document.getElementById("bookList");
+            bookList.innerHTML = ""; // Clear the current list
+
+            const includeOldTestament = document.getElementById("oldTestament").checked;
+            const includeNewTestament = document.getElementById("newTestament").checked;
+
+            let booksToDisplay = [];
+            if (includeOldTestament) booksToDisplay = booksToDisplay.concat(oldTestamentBooks);
+            if (includeNewTestament) booksToDisplay = booksToDisplay.concat(newTestamentBooks);
+
+            booksToDisplay.forEach(book => {
+                const option = document.createElement("option");
+                option.value = book;
+                option.textContent = book;
+                bookList.appendChild(option);
+            });
+        }
+    </script>
+</head>
+<body>
+    <form onsubmit="updateIframe(event)">
+        <label>
+            <input type="checkbox" id="oldTestament" onclick="populateBooks()"> Old Testament
+        </label>
+        <label>
+            <input type="checkbox" id="newTestament" onclick="populateBooks()"> New Testament
+        </label>
+        <label for="bookList">Book:</label>
+        <select id="bookList" name="book" required>
+            <!-- Options will be populated dynamically -->
+        </select>
+        <label for="version">Version:</label>
+        <select id="version" name="version" required>
+            <option value="NIV">NIV</option>
+            <option value="NLT">NLT</option>
+            <option value="ESV">ESV</option>
+            <option value="NKJV">NKJV</option>
+            <option value="KJV">KJV</option>
+            <!-- Add more versions as needed -->
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    <iframe id="bibleIframe" width="100%" height="1000px" style="border: none;"></iframe>
+
+</body>
+</html>
