@@ -179,6 +179,12 @@
         }
       }
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const newTestamentCheckbox = document.getElementById("newTestament");
+      newTestamentCheckbox.checked = true;
+      populateBooks();
+    });
   </script>
 </head>
 <body>
