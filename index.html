@@ -209,10 +209,10 @@
           </svg>
         </button>
       </div>
-      <label for="chapterList">Chapter:</label>
+      
       <div id="chapterControl">
-        <select id="chapterList" name="chapter" required onchange="updateIframe();">
-          <option value="1" selected>1</option>
+        <select id="chapterList" name="chapter" required onchange="updateIframe();" placeholder="Chapter">
+          <option value="" disabled selected>Chapter</option>
         </select>
         <!-- Backward arrow button for chapter selection -->
         <button type="button" onclick="changeChapter(-1)">
