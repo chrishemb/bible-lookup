@@ -12,7 +12,7 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      font-family: 'Roboto', sans-serif; /* Apply the Roboto font */
+      font-family: 'Roboto', sans-serif;
     }
     #container {
       flex: 1;
@@ -23,6 +23,45 @@
       padding: 10px;
       background-color: #f0f0f0;
     }
+    /* Common control container styling for book and chapter controls */
+    #bookControl,
+    #chapterControl {
+      display: inline-flex;
+      align-items: center;
+      gap: 0px;
+    }
+    /* Common arrow button styling */
+    #bookControl button,
+    #chapterControl button {
+      background: none;
+      border: none;
+      outline: none;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+    /* Common SVG styling for arrow icons */
+    #bookControl button svg,
+    #chapterControl button svg {
+      width: 24px;
+      height: 24px;
+      fill: #333;
+      transition: fill 0.2s ease;
+    }
+    #bookControl button:hover svg,
+    #chapterControl button:hover svg {
+      fill: #555;
+    }
+    #bookControl button:active,
+    #chapterControl button:active {
+      transform: scale(0.95);
+    }
+    select {
+      padding: 5px;
+      margin: 0;
+    }
     #bibleIframe {
       flex: 1;
       width: 100%;
@@ -31,21 +70,45 @@
   </style>
   <script>
     function updateIframe(e) {
-      // Only prevent default if an event is provided (i.e. during form submission)
       if (e && e.preventDefault) {
         e.preventDefault();
       }
-
       // Get selected values
       const book = document.getElementById("bookList").value;
       const chapter = document.getElementById("chapterList").value;
       const version = document.getElementById("version").value;
-
       // Construct the URL
       const newPageURL = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(book)}${encodeURIComponent(chapter)}&version=${encodeURIComponent(version)}&interface=print`;
-
       // Update the iframe to display the new page
       document.getElementById("bibleIframe").src = newPageURL;
+    }
+
+    function changeChapter(delta) {
+      const chapterSelect = document.getElementById("chapterList");
+      let currentChapter = parseInt(chapterSelect.value, 10);
+      const currentBook = document.getElementById("bookList").value;
+      const maxChapter = bibleBooks[currentBook] || 1;
+      let newChapter = currentChapter + delta;
+      if (newChapter < 1) {
+        newChapter = 1;
+      } else if (newChapter > maxChapter) {
+        newChapter = maxChapter;
+      }
+      chapterSelect.value = newChapter;
+      updateIframe();
+    }
+
+    function changeBook(delta) {
+      const bookSelect = document.getElementById("bookList");
+      let newIndex = bookSelect.selectedIndex + delta;
+      if (newIndex < 0) {
+        newIndex = 0;
+      } else if (newIndex >= bookSelect.options.length) {
+        newIndex = bookSelect.options.length - 1;
+      }
+      bookSelect.selectedIndex = newIndex;
+      populateChapters();
+      updateIframe();
     }
 
     const oldTestamentBooks = [
@@ -70,15 +133,12 @@
 
     function populateBooks() {
       const bookList = document.getElementById("bookList");
-      bookList.innerHTML = ""; // Clear the current list
-
+      bookList.innerHTML = "";
       const includeOldTestament = document.getElementById("oldTestament").checked;
       const includeNewTestament = document.getElementById("newTestament").checked;
-
       let booksToDisplay = [];
       if (includeOldTestament) booksToDisplay = booksToDisplay.concat(oldTestamentBooks);
       if (includeNewTestament) booksToDisplay = booksToDisplay.concat(newTestamentBooks);
-
       booksToDisplay.forEach(book => {
         const option = document.createElement("option");
         option.value = book;
@@ -89,7 +149,6 @@
     }
 
     const bibleBooks = {
-      // Old Testament
       "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
       "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
       "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
@@ -98,8 +157,6 @@
       "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
       "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
       "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
-      
-      // New Testament
       "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
       "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
       "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3,
@@ -111,8 +168,7 @@
     function populateChapters() {
       const book = document.getElementById("bookList").value;
       const chapterList = document.getElementById("chapterList");
-      chapterList.innerHTML = ""; // Clear the current list
-
+      chapterList.innerHTML = "";
       const chapterCount = bibleBooks[book];
       if (chapterCount) {
         for (let i = 1; i <= chapterCount; i++) {
@@ -127,7 +183,6 @@
 </head>
 <body>
   <div id="container">
-    <!-- Form submission passes the event to prevent default form submission -->
     <form onsubmit="updateIframe(event)">
       <label>
         <input type="checkbox" id="oldTestament" onclick="populateBooks(); updateIframe();"> OT
@@ -136,13 +191,42 @@
         <input type="checkbox" id="newTestament" onclick="populateBooks(); updateIframe();"> NT
       </label>
       <label for="bookList">Book:</label>
-      <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();">
-        <!-- Options will be populated dynamically -->
-      </select>
+      <div id="bookControl">
+        
+        <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();">
+          <!-- Options will be populated dynamically -->
+        </select>
+<!-- Backward arrow button for book selection -->
+        <button type="button" onclick="changeBook(-1)">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <!-- Forward arrow button for book selection -->
+        <button type="button" onclick="changeBook(1)">
+          <svg viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+          </svg>
+        </button>
+      </div>
       <label for="chapterList">Chapter:</label>
-      <select id="chapterList" name="chapter" required onchange="updateIframe();">
-        <option value="1" selected>1</option>
-      </select>
+      <div id="chapterControl">
+        <select id="chapterList" name="chapter" required onchange="updateIframe();">
+          <option value="1" selected>1</option>
+        </select>
+        <!-- Backward arrow button for chapter selection -->
+        <button type="button" onclick="changeChapter(-1)">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <!-- Forward arrow button for chapter selection -->
+        <button type="button" onclick="changeChapter(1)">
+          <svg viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+          </svg>
+        </button>
+      </div>
       <label for="version">Version:</label>
       <select id="version" name="version" required onchange="updateIframe();">
         <option value="NIV">NIV</option>
@@ -150,8 +234,8 @@
         <option value="ESV">ESV</option>
         <option value="NKJV">NKJV</option>
         <option value="KJV">KJV</option>
+<option value="SHB">Saral Hindi</option>
       </select>
-      <!-- <button type="submit">Submit</button> -->
     </form>
     <iframe id="bibleIframe"></iframe>
   </div>
