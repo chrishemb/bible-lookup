@@ -122,17 +122,17 @@ const bibleBooks = {
     <div id="container">
         <form onsubmit="updateIframe(event)">
             <label>
-                <input type="checkbox" id="oldTestament" onclick="populateBooks()"> Old Testament
+                <input type="checkbox" id="oldTestament" onclick="populateBooks(); updateIframe(event);"> Old Testament
             </label>
             <label>
-                <input type="checkbox" id="newTestament" onclick="populateBooks()"> New Testament
+                <input type="checkbox" id="newTestament" onclick="populateBooks(); updateIframe(event);"> New Testament
             </label>
             <label for="bookList">Book:</label>
-            <select id="bookList" name="book" required onchange="populateChapters()">
+            <select id="bookList" name="book" required onchange="populateChapters(); updateIframe(event);">
                 <!-- Options will be populated dynamically -->
             </select>
 	    <label for="chapterList">Chapter:</label>
-            <select id="chapterList" name="chapter" required>
+            <select id="chapterList" name="chapter" required onchange="updateIframe(event);">
                 <option value="1" selected>1</option>
             </select>
             <label for="version">Version:</label>
