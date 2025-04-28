@@ -32,10 +32,11 @@
 
             // Get selected values
             const book = document.getElementById("bookList").value;
+	    const chapter = document.getElementById("chapterList").value;
             const version = document.getElementById("version").value;
 
             // Construct the URL
-            const newPageURL = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(book)}&version=${encodeURIComponent(version)}&interface=print`;
+            const newPageURL = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(book)}${encodeURIComponent(chapter)}&version=${encodeURIComponent(version)}&interface=print`;
 
             // Update the iframe to display the new page
             document.getElementById("bibleIframe").src = newPageURL;
@@ -78,6 +79,42 @@
                 option.textContent = book;
                 bookList.appendChild(option);
             });
+	    populateChapters();
+        }
+const bibleBooks = {
+        // Old Testament
+        "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
+        "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
+        "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
+        "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
+        "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
+        "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
+        "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
+        "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
+
+        // New Testament
+        "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+        "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
+        "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3,
+        "1 Timothy": 6, "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13,
+        "James": 5, "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1,
+        "3 John": 1, "Jude": 1, "Revelation": 22
+    };
+
+        function populateChapters() {
+            const book = document.getElementById("bookList").value;
+            const chapterList = document.getElementById("chapterList");
+            chapterList.innerHTML = ""; // Clear the current list
+
+            const chapterCount = bibleBooks[book];
+            if (chapterCount) {
+                for (let i = 1; i <= chapterCount; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = `${i}`;
+                    chapterList.appendChild(option);
+                }
+            }
         }
     </script>
 </head>
@@ -91,8 +128,12 @@
                 <input type="checkbox" id="newTestament" onclick="populateBooks()"> New Testament
             </label>
             <label for="bookList">Book:</label>
-            <select id="bookList" name="book" required>
+            <select id="bookList" name="book" required onchange="populateChapters()">
                 <!-- Options will be populated dynamically -->
+            </select>
+	    <label for="chapterList">Chapter:</label>
+            <select id="chapterList" name="chapter" required>
+                <option value="1" selected>1</option>
             </select>
             <label for="version">Version:</label>
             <select id="version" name="version" required>
