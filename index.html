@@ -190,11 +190,10 @@
       <label>
         <input type="checkbox" id="newTestament" onclick="populateBooks(); updateIframe();"> NT
       </label>
-      <label for="bookList">Book:</label>
       <div id="bookControl">
         
-        <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();">
-          <!-- Options will be populated dynamically -->
+        <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();" placeholder="Book">
+          <option value="" disabled selected>Book</option>
         </select>
 <!-- Backward arrow button for book selection -->
         <button type="button" onclick="changeBook(-1)">
@@ -227,7 +226,6 @@
           </svg>
         </button>
       </div>
-      <label for="version">Version:</label>
       <select id="version" name="version" required onchange="updateIframe();">
         <option value="NIV">NIV</option>
         <option value="NLT">NLT</option>
