@@ -67,6 +67,11 @@
       width: 100%;
       border: none;
     }
+#ribbonControl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
   </style>
   <script>
     function updateIframe(e) {
@@ -191,6 +196,7 @@
 <body>
   <div id="container">
     <form onsubmit="updateIframe(event)">
+<div id="ribbonControl">
       <label>
         <input type="checkbox" id="oldTestament" onclick="populateBooks(); updateIframe();"> OT
       </label>
@@ -233,6 +239,7 @@
           </svg>
         </button>
       </div>
+	
       <select id="version" name="version" required onchange="updateIframe();">
         <option value="NIV">NIV</option>
         <option value="NLT">NLT</option>
@@ -240,7 +247,7 @@
         <option value="NKJV">NKJV</option>
         <option value="KJV">KJV</option>
 <option value="SHB">Saral Hindi</option>
-      </select>
+      </select><img alt="Hits" src="https://hits.sh/chrishemb.github.io/bible-lookup.svg"/></div>
     </form>
     <iframe id="bibleIframe"></iframe>
   </div>
