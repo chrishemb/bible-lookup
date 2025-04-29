@@ -10,39 +10,43 @@
     html, body {
       height: 100%;
       margin: 0;
+      font-family: 'Roboto', sans-serif;
       display: flex;
       flex-direction: column;
-      font-family: 'Roboto', sans-serif;
     }
     #container {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
+    /* Base styling for the form */
     form {
       padding: 5px;
       background-color: #f0f0f0;
+      display: flex;
+      flex-direction: row; /* Initially arrange elements in a row */
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    /* Common control container styling for book and chapter controls */
+    /* Inline-flex containers for book and chapter controls */
     #bookControl,
     #chapterControl {
       display: inline-flex;
       align-items: center;
-      gap: 0px;
     }
-    /* Common arrow button styling */
+    /* Button & SVG styling for arrow controls */
     #bookControl button,
     #chapterControl button {
       background: none;
       border: none;
       outline: none;
-      padding: 5px;
+      padding: 3px;
       cursor: pointer;
       display: flex;
       align-items: center;
       transition: transform 0.2s ease;
     }
-    /* Common SVG styling for arrow icons */
     #bookControl button svg,
     #chapterControl button svg {
       width: 24px;
@@ -67,6 +71,7 @@
       width: 100%;
       border: none;
     }
+    
   </style>
   <script>
     function updateIframe(e) {
@@ -190,6 +195,7 @@
 </head>
 <body>
   <div id="container">
+    
     <form onsubmit="updateIframe(event)">
       <label>
         <input type="checkbox" id="oldTestament" onclick="populateBooks(); updateIframe();"> OT
@@ -197,12 +203,19 @@
       <label>
         <input type="checkbox" id="newTestament" onclick="populateBooks(); updateIframe();"> NT
       </label>
+      <select id="version" name="version" required onchange="updateIframe();">
+        <option value="NIV">NIV</option>
+        <option value="NLT">NLT</option>
+        <option value="ESV">ESV</option>
+        <option value="NKJV">NKJV</option>
+        <option value="KJV">KJV</option>
+        <option value="SHB">Saral Hindi</option>
+      </select>
       <div id="bookControl">
-        
         <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();" placeholder="Book">
           <option value="" disabled selected>Book</option>
         </select>
-<!-- Backward arrow button for book selection -->
+        <!-- Backward arrow button for book selection -->
         <button type="button" onclick="changeBook(-1)">
           <svg viewBox="0 0 24 24">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -215,7 +228,6 @@
           </svg>
         </button>
       </div>
-      
       <div id="chapterControl">
         <select id="chapterList" name="chapter" required onchange="updateIframe();" placeholder="Chapter">
           <option value="" disabled selected>Chapter</option>
@@ -233,15 +245,8 @@
           </svg>
         </button>
       </div>
-      <select id="version" name="version" required onchange="updateIframe();">
-        <option value="NIV">NIV</option>
-        <option value="NLT">NLT</option>
-        <option value="ESV">ESV</option>
-        <option value="NKJV">NKJV</option>
-        <option value="KJV">KJV</option>
-<option value="SHB">Saral Hindi</option>
-      </select>
     </form>
+    
     <iframe id="bibleIframe"></iframe>
   </div>
 </body>
