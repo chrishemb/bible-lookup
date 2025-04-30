@@ -29,6 +29,9 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+    #hits-image {
+      margin-left: auto;
+    }
     /* Inline-flex containers for book and chapter controls */
     #bookControl,
     #chapterControl {
@@ -71,6 +74,15 @@
       width: 100%;
       border: none;
     }
+    
+
+    /* Hide image for mobile and tablet screens */
+        @media screen and (max-width: 1024px) {
+            #hits-image {
+                display: none;
+            }
+        }
+
     
   </style>
   <script>
@@ -244,7 +256,9 @@
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
           </svg>
         </button>
+        
       </div>
+      <img id="hits-image" src="https://hits.sh/chrishemb.github.io/bible-lookup.svg">
     </form>
     
     <iframe id="bibleIframe"></iframe>
