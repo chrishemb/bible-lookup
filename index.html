@@ -38,6 +38,11 @@
       display: inline-flex;
       align-items: center;
     }
+    /* Styling the search input */
+    #bookSearch {
+      padding: 5px;
+      margin-right: 5px;
+    }
     /* Button & SVG styling for arrow controls */
     #bookControl button,
     #chapterControl button {
@@ -74,16 +79,12 @@
       width: 100%;
       border: none;
     }
-    
-
     /* Hide image for mobile and tablet screens */
-        @media screen and (max-width: 1024px) {
-            #hits-image {
-                display: none;
-            }
-        }
-
-    
+    @media screen and (max-width: 1024px) {
+      #hits-image {
+        display: none;
+      }
+    }
   </style>
   <script>
     function updateIframe(e) {
@@ -156,6 +157,16 @@
       let booksToDisplay = [];
       if (includeOldTestament) booksToDisplay = booksToDisplay.concat(oldTestamentBooks);
       if (includeNewTestament) booksToDisplay = booksToDisplay.concat(newTestamentBooks);
+      
+      // Get search term from bookSearch input and filter books accordingly
+      const searchTerm = document.getElementById("bookSearch").value.trim().toLowerCase();
+      if (searchTerm !== "") {
+        booksToDisplay = booksToDisplay.filter(book =>
+          book.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Populate bookList dropdown with filtered books
       booksToDisplay.forEach(book => {
         const option = document.createElement("option");
         option.value = book;
@@ -207,7 +218,6 @@
 </head>
 <body>
   <div id="container">
-    
     <form onsubmit="updateIframe(event)">
       <label>
         <input type="checkbox" id="oldTestament" onclick="populateBooks(); updateIframe();"> OT
@@ -224,6 +234,8 @@
         <option value="SHB">Saral Hindi</option>
       </select>
       <div id="bookControl">
+        <!-- Search input for filtering books -->
+        <input type="text" id="bookSearch" placeholder="Search Book" oninput="populateBooks();">
         <select id="bookList" name="book" required onchange="populateChapters(); updateIframe();" placeholder="Book">
           <option value="" disabled selected>Book</option>
         </select>
@@ -256,11 +268,9 @@
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
           </svg>
         </button>
-        
       </div>
       <img id="hits-image" src="https://hits.sh/chrishemb.github.io/bible-lookup.svg">
     </form>
-    
     <iframe id="bibleIframe"></iframe>
   </div>
 </body>
